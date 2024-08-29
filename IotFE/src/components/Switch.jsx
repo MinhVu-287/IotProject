@@ -54,12 +54,20 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
 const SwitchComponent = ({ checked, onChange }) => {
   return (
     <FormGroup>
-      <Box 
-        display="flex" 
-        alignItems="center" 
-        justifyContent="space-between" 
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        flexDirection="column" // Set layout to column
         height="100%" // Ensure the box takes full height of the container
       >
+        <LightbulbIcon
+          style={{
+            fontSize: 60, // Adjust size of the icon
+            color: checked ? '#FFCE56' : '#9e9e9e', // Yellow when checked, gray when unchecked
+            marginBottom: '16px', // Add some space between icon and switch
+          }}
+        />
         <FormControlLabel
           control={
             <MaterialUISwitch
@@ -68,17 +76,11 @@ const SwitchComponent = ({ checked, onChange }) => {
             />
           }
           label={checked ? "Sáng" : "Tối"} // Change labels
-        />
-        <LightbulbIcon
-          style={{
-            fontSize: 60, // Adjust size of the icon
-            color: checked ? '#FFCE56' : '#9e9e9e', // Yellow when checked, gray when unchecked
-          }}
+          labelPlacement="top" // Position label above the switch
         />
       </Box>
     </FormGroup>
   );
 };
-
 
 export default SwitchComponent;
