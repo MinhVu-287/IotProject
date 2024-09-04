@@ -1,72 +1,99 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { AppBar, Toolbar, IconButton, Menu, MenuItem } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import * as React from 'react';
+import { styled } from '@mui/material/styles';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import MuiToolbar from '@mui/material/Toolbar';
+import { tabsClasses } from '@mui/material/Tabs';
+import Typography from '@mui/material/Typography';
+import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
+import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
+import SideMenuMobile from './SideMenuMobile'; // Ensure this file exists
+import MenuButton from './MenuButton'; // Ensure this file exists
 
-const NavBar = () => {
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
+const Toolbar = styled(MuiToolbar)({
+  width: '100%',
+  padding: '12px',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'start',
+  justifyContent: 'center',
+  gap: '12px',
+  flexShrink: 0,
+  [`& ${tabsClasses.flexContainer}`]: {
+    gap: '8px',
+    p: '8px',
+    pb: 0,
+  },
+});
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+export default function NavBar() {
+  const [open, setOpen] = React.useState(false);
 
-  const handleClose = () => {
-    setAnchorEl(null);
+  const toggleDrawer = (newOpen) => () => {
+    setOpen(newOpen);
   };
 
   return (
-    <AppBar position="static" sx={{ mb: 2 }}>
-      <Toolbar variant="dense" sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
-          <MenuIcon />
-        </IconButton>
-        <div className="flex flex-grow justify-between">
-          <Link to="/dashboard" className="text-white hover:text-gray-200">
-            Dashboard
-          </Link>
-          <Link to="/datasensor-history" className="text-white hover:text-gray-200">
-            Datasensor History
-          </Link>
-          <Link to="/action-history" className="text-white hover:text-gray-200">
-            Action History
-          </Link>
-        </div>
-        <div className="flex items-center ml-4">
-          <IconButton
-            size="large"
-            aria-label="account of current user"
-            aria-controls="menu-appbar"
-            aria-haspopup="true"
-            onClick={handleClick}
-            color="inherit"
-          >
-            <AccountCircleIcon style={{ fontSize: 40 }} />
-          </IconButton>
-          <Menu
-            id="menu-appbar"
-            anchorEl={anchorEl}
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-          >
-            <MenuItem onClick={handleClose}>
-              <Link to="/profile" className="text-blue-600 hover:text-blue-800">Profile</Link>
-            </MenuItem>
-          </Menu>
-        </div>
+    <AppBar
+      position="fixed"
+      sx={{
+        display: { xs: 'auto', md: 'none' },
+        boxShadow: 0,
+        bgcolor: 'background.paper',
+        backgroundImage: 'none',
+        borderBottom: '1px solid',
+        borderColor: 'divider',
+        top: '56px',
+      }}
+    >
+      <Toolbar variant="regular">
+        <Stack
+          direction="row"
+          sx={{
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexGrow: 1,
+            width: '100%',
+          }}
+        >
+          <Stack direction="row" spacing={1} sx={{ justifyContent: 'center' }}>
+            <CustomIcon />
+            <Typography variant="h4" component="h1" sx={{ color: 'text.primary' }}>
+              Dashboard
+            </Typography>
+          </Stack>
+          <MenuButton aria-label="menu" onClick={toggleDrawer(true)}>
+            <MenuRoundedIcon />
+          </MenuButton>
+          <SideMenuMobile open={open} toggleDrawer={toggleDrawer} />
+        </Stack>
       </Toolbar>
     </AppBar>
   );
-};
+}
 
-export default NavBar;
+export function CustomIcon() {
+  return (
+    <Box
+      sx={{
+        width: '1.5rem',
+        height: '1.5rem',
+        bgcolor: 'black',
+        borderRadius: '999px',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'center',
+        backgroundImage:
+          'linear-gradient(135deg, hsl(210, 98%, 60%) 0%, hsl(210, 100%, 35%) 100%)',
+        color: 'hsla(210, 100%, 95%, 0.9)',
+        border: '1px solid',
+        borderColor: 'hsl(210, 100%, 55%)',
+        boxShadow: 'inset 0 2px 5px rgba(255, 255, 255, 0.3)',
+      }}
+    >
+      <DashboardRoundedIcon color="inherit" sx={{ fontSize: '1rem' }} />
+    </Box>
+  );
+}

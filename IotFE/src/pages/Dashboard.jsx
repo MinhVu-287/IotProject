@@ -34,14 +34,14 @@ const Dashboard = () => {
           <Grid container spacing={2} mb={8}>
             <Grid item lg={4} md={6} xs={12}>
               <Card
-                title="Nhiệt độ: °C"
+                title="Nhiệt độ: 30°C"
                 icon={<FaThermometerHalf />}
                 style={{ backgroundColor: '#FF6384' }} // Color for temperature
               />
             </Grid>
             <Grid item lg={4} md={6} xs={12}>
               <Card
-                title="Độ ẩm: %"
+                title="Độ ẩm: 70%"
                 icon={<FaTint />}
                 style={{ backgroundColor: '#36A2EB' }} // Color for humidity
               />

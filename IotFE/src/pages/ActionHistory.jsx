@@ -1,14 +1,13 @@
 import React from 'react';
 import StickyHeadTable from '../components/Table';
 
-const DataSensorHistory = () => {
+const ActionHistory = () => {
     return (
         <div className="p-4">
-            <h1 className="text-2xl font-bold mb-4">Data Sensor History</h1>
+            <h1 className="text-2xl font-bold mb-4">Action History</h1>
             <StickyHeadTable />
         </div>
     );
 }
 
-export default DataSensorHistory;
-
+export default ActionHistory;
