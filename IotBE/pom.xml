@@ -66,13 +66,19 @@
 			<scope>test</scope>
 		</dependency>
 
-<!--		&lt;!&ndash; https://mvnrepository.com/artifact/org.eclipse.paho/mqtt-client &ndash;&gt;-->
-<!--		<dependency>-->
-<!--			<groupId>org.eclipse.paho</groupId>-->
-<!--			<artifactId>mqtt-client</artifactId>-->
-<!--			<version>0.4.0</version>-->
-<!--		</dependency>-->
+		<!-- https://mvnrepository.com/artifact/org.modelmapper/modelmapper -->
+		<dependency>
+			<groupId>org.modelmapper</groupId>
+			<artifactId>modelmapper</artifactId>
+			<version>3.1.0</version>
+		</dependency>
 
+
+<!--				 https://mvnrepository.com/artifact/org.eclipse.paho/mqtt-client -->
+		<dependency>
+			<groupId>org.springframework.integration</groupId>
+			<artifactId>spring-integration-mqtt</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>

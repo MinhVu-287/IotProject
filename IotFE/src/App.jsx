@@ -3,18 +3,18 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
 import DataSensorHistory from './pages/DataSensorHistory';
 import ActionHistory from './pages/ActionHistory';
-import NavBar from './components/NavBar';
+import CustomAppBar from './components/CustomAppBar';
 
 function App() {
   return (
     <Router>
       <div className="App">
-        <NavBar />
+        <CustomAppBar />
         <Routes>
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/sensor-history" element={<DataSensorHistory />} />
+          <Route path="/data-sensor-history" element={<DataSensorHistory />} />
           <Route path="/action-history" element={<ActionHistory />} />
-        </Routes> 
+        </Routes>
       </div>
     </Router>
   );

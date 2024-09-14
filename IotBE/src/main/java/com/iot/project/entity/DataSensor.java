@@ -16,10 +16,10 @@ public class DataSensor {
     private Long id;
 
     @Column(name = "temperature")
-    private Integer temperature;
+    private String temperature;
 
     @Column(name = "humanity")
-    private Integer humanity;
+    private String humanity;
 
     @Column(name = "light")
     private String light;
@@ -28,4 +28,6 @@ public class DataSensor {
     @Column(name = "time")
     private Date time;
 
+    public void setHumidity(String s) {
+    }
 }

@@ -1,6 +1,6 @@
 package com.iot.project.exception;
 
-import com.iot.project.dto.response.ApiResponse;
+import com.iot.project.dto.ApiResponse;
 import com.iot.project.utils.ErrorCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
