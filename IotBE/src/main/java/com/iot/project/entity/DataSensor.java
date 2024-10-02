@@ -3,6 +3,8 @@ package com.iot.project.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -18,16 +20,12 @@ public class DataSensor {
     @Column(name = "temperature")
     private String temperature;
 
-    @Column(name = "humanity")
-    private String humanity;
+    @Column(name = "humidity")
+    private String humidity;
 
     @Column(name = "light")
     private String light;
 
-    @Temporal(TemporalType.DATE)
     @Column(name = "time")
-    private Date time;
-
-    public void setHumidity(String s) {
-    }
+    private LocalDateTime time;
 }

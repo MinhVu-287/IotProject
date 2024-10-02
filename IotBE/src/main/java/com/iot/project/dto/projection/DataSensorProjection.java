@@ -1,11 +1,12 @@
 package com.iot.project.dto.projection;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public interface DataSensorProjection {
-    Long getID();
+    Long getId();
     String getTemperature();
     String getHumidity();
     String getLight();
-    Date getTime();
+    LocalDateTime getTime();
 }

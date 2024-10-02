@@ -3,6 +3,8 @@ package com.iot.project.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -21,8 +23,7 @@ public class ActionLog {
     @Column(name = "action")
     private String action;
 
-    @Temporal(TemporalType.DATE)
     @Column(name = "time")
-    private Date time;
+    private LocalDateTime time;
 
 }
