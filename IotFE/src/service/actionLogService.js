@@ -17,6 +17,22 @@ const getAllActionsWithCondition = async (page = 0, size = 10, search = '') => {
     }
 };
 
+const sendAction = async (actionData) => {
+    try {
+        const response = await axios.post(API_URL, actionData, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        console.log('Action sent successfully:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error sending action:', error.response ? error.response.data : error.message);
+        throw error;
+    }
+};
 export const actionLogService = {
-    getAllActionsWithCondition
+    getAllActionsWithCondition,
+    sendAction
 };

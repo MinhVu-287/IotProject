@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { Box, Card, CardContent, CardHeader } from '@mui/material';
 import { format } from 'date-fns';
@@ -6,16 +6,34 @@ import { format } from 'date-fns';
 export default function SensorBarChart({ data }) {
   const [title, setTitle] = useState('Biểu đồ Nhiệt độ - Độ ẩm - Ánh sáng');
 
+  // Kiểm tra xem `data` có tồn tại hay không
+  if (!data || data.length === 0) {
+    console.log('No data available:', data);
+    return <div>Không có dữ liệu để hiển thị biểu đồ.</div>;
+  }
+
+  // Log dữ liệu ban đầu nhận được
+  console.log('Raw data:', data);
+
   // Formatting data for the chart
-  const formattedData = data?.map((item) => ({
+  const formattedData = data.map((item) => ({
     ...item,
-    formattedDate: format(new Date(item.date), 'dd/MM/yyyy'),
+    formattedDate: format(new Date(item.time), 'dd/MM/yyyy HH:mm:ss'), // Format date-time
   }));
 
+  // Log dữ liệu đã format
+  console.log('Formatted data:', formattedData);
+
   const labels = formattedData.map((item) => item.formattedDate);
-  const temperatureData = formattedData.map((item) => item.temperature);
-  const humidityData = formattedData.map((item) => item.humidity);
-  const lightData = formattedData.map((item) => item.light);
+  const temperatureData = formattedData.map((item) => parseFloat(item.temperature));
+  const humidityData = formattedData.map((item) => parseFloat(item.humidity));
+  const lightData = formattedData.map((item) => parseFloat(item.light));
+
+  // Log các phần dữ liệu để truyền vào biểu đồ
+  console.log('Labels:', labels);
+  console.log('Temperature Data:', temperatureData);
+  console.log('Humidity Data:', humidityData);
+  console.log('Light Data:', lightData);
 
   return (
     <Card>

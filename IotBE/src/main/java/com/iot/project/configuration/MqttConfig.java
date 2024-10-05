@@ -20,8 +20,6 @@ import org.springframework.integration.mqtt.core.MqttPahoClientFactory;
 import org.springframework.integration.mqtt.inbound.MqttPahoMessageDrivenChannelAdapter;
 import org.springframework.integration.mqtt.outbound.MqttPahoMessageHandler;
 import org.springframework.integration.mqtt.support.DefaultPahoMessageConverter;
-import org.springframework.integration.support.MessageBuilder;
-import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHandler;
 
@@ -54,6 +52,8 @@ public class MqttConfig {
         options.setServerURIs(new String[]{brokerUrl});
         options.setUserName(username);
         options.setPassword(password.toCharArray());
+        options.setConnectionTimeout(1000);  // Increase connection timeout to 60 seconds
+        options.setKeepAliveInterval(1000);  // Set keep alive interval
         factory.setConnectionOptions(options);
         return factory;
     }
@@ -63,11 +63,25 @@ public class MqttConfig {
         return new DirectChannel();
     }
 
+    // Inbound adapter for 'data_sensor' topic
     @Bean
-    public MessageProducer inbound() {
+    public MessageProducer inboundDataSensor() {
         MqttPahoMessageDrivenChannelAdapter adapter =
-                new MqttPahoMessageDrivenChannelAdapter("spring-mqtt-client", mqttClientFactory(),
-                        "data_sensor", "action");  // Subscribe to "data_sensor" and "action" topics
+                new MqttPahoMessageDrivenChannelAdapter("spring-mqtt-client-data-sensor", mqttClientFactory(),
+                        "data_sensor");  // Subscribe to "data_sensor" topic
+        adapter.setCompletionTimeout(5000);
+        adapter.setConverter(new DefaultPahoMessageConverter());
+        adapter.setQos(1);
+        adapter.setOutputChannel(mqttInputChannel());
+        return adapter;
+    }
+
+    // Inbound adapter for 'action' topic
+    @Bean
+    public MessageProducer inboundAction() {
+        MqttPahoMessageDrivenChannelAdapter adapter =
+                new MqttPahoMessageDrivenChannelAdapter("spring-mqtt-client-action", mqttClientFactory(),
+                        "action");  // Subscribe to "action" topic
         adapter.setCompletionTimeout(5000);
         adapter.setConverter(new DefaultPahoMessageConverter());
         adapter.setQos(1);
@@ -91,16 +105,9 @@ public class MqttConfig {
             try {
                 JsonNode jsonNode = objectMapper.readTree(payload);
 
-                // Check if the JSON has the required fields
+                // Check if the JSON has the required fields for data_sensor
                 if (jsonNode.has("temperature") && jsonNode.has("humidity") && jsonNode.has("light")) {
                     saveDataSensor(jsonNode);
-                } else {
-                    log.warn("JSON missing required fields.");
-                }
-
-                // Check for an action log
-                if (jsonNode.has("action")) {
-                    saveActionLog(jsonNode);
                 }
             } catch (Exception e) {
                 // Log error when parsing JSON
@@ -109,23 +116,7 @@ public class MqttConfig {
         };
     }
 
-    @Bean
-    public MqttPahoMessageHandler mqttPahoMessageHandler() {
-        // Create the handler with the appropriate constructor
-        MqttPahoMessageHandler messageHandler = new MqttPahoMessageHandler("spring-mqtt-client", mqttClientFactory());
-        messageHandler.setAsync(true);
-        return messageHandler;
-    }
-
-    public void sendActionMessage(String action) {
-        String jsonMessage = String.format("{\"action\":\"%s\"}", action);
-        Message<String> message = MessageBuilder.withPayload(jsonMessage)
-                .setHeader("mqtt_topic", "action")
-                .build();
-
-        mqttPahoMessageHandler().handleMessage(message);
-    }
-
+    // Save DataSensor entity to database
     private void saveDataSensor(JsonNode jsonNode) {
         DataSensor dataSensor = new DataSensor();
         dataSensor.setTemperature(jsonNode.get("temperature").asText());
@@ -140,16 +131,10 @@ public class MqttConfig {
         }
     }
 
-    private void saveActionLog(JsonNode jsonNode) {
-        ActionLog actionLog = new ActionLog();
-        actionLog.setDevice("esp32");
-        actionLog.setAction(jsonNode.get("action").asText());
-        actionLog.setTime(LocalDateTime.now());
-        try {
-            actionLogRepository.save(actionLog);
-            log.info("Saved ActionLog to MySQL.");
-        } catch (Exception e) {
-            log.error("Error saving ActionLog: {}", e.getMessage());
-        }
+    @Bean
+    public MqttPahoMessageHandler mqttPahoMessageHandler() {
+        MqttPahoMessageHandler messageHandler = new MqttPahoMessageHandler("spring-mqtt-client", mqttClientFactory());
+        messageHandler.setAsync(true);
+        return messageHandler;
     }
 }

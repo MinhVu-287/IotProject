@@ -63,7 +63,7 @@ const SwitchComponent = ({ checked, onChange }) => {
       >
         <LightbulbIcon
           style={{
-            fontSize: 130, // Adjust size of the icon
+            fontSize: 97, // Adjust size of the icon
             color: checked ? '#FFCE56' : '#9e9e9e', // Yellow when checked, gray when unchecked
             marginBottom: '16px', // Add some space between icon and switch
           }}
