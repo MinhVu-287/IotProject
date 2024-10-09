@@ -21,6 +21,7 @@ const NAV_ITEMS = [
   { title: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
   { title: 'Data Sensor History', icon: <HistoryIcon />, path: '/data-sensor-history' },
   { title: 'Action History', icon: <HistoryIcon />, path: '/action-history' },
+  { title: 'Profile', icon: <HistoryIcon />, path: '/profile'}
 ];
 
 function CustomAppBar(props) {

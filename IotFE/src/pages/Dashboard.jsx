@@ -94,7 +94,6 @@ const Dashboard = () => {
                 title={`Độ ẩm: ${latestData.humidity}%`}
                 icon={<FaTint />}
                 style={{ backgroundColor: '#36A2EB' }} // Color for humidity
-                image=
               />
             </Grid>
             <Grid item lg={4} md={6} xs={12}>
