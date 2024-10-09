@@ -34,7 +34,7 @@ const Profile = () => {
               icon={<FaGithub size={24} />}
               title="GitHub"
               url={githubUrl}
-              description="Your project repository"
+              description="My project repository"
             />
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
