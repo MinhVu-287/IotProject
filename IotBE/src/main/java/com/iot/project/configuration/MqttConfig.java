@@ -2,7 +2,6 @@ package com.iot.project.configuration;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.iot.project.entity.ActionLog;
 import com.iot.project.entity.DataSensor;
 import com.iot.project.repository.ActionLogRepository;
 import com.iot.project.repository.DataSensorRepository;
@@ -22,7 +21,6 @@ import org.springframework.integration.mqtt.outbound.MqttPahoMessageHandler;
 import org.springframework.integration.mqtt.support.DefaultPahoMessageConverter;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHandler;
-
 import java.time.LocalDateTime;
 import java.util.Date;
 

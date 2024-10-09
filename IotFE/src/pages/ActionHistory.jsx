@@ -101,7 +101,7 @@ const ActionHistory = () => {
                                 {rows.map((row) => (
                                     <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
                                         {columns.map((column) => (
-                                            <TableCell key={column.id}>
+                                            <TableCell key={column.id}> 
                                                 {row[column.id] ?? 'N/A'} {/* Handle null values */}
                                             </TableCell>
                                         ))}

@@ -1,8 +1,6 @@
 package com.iot.project.repository;
 
 import com.iot.project.dto.projection.ActionLogProjection;
-import com.iot.project.dto.projection.DataSensorProjection;
-import com.iot.project.dto.response.ActionLogResponse;
 import com.iot.project.entity.ActionLog;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
