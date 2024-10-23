@@ -28,6 +28,7 @@ export default function SensorBarChart({ data }) {
   const temperatureData = formattedData.map((item) => parseFloat(item.temperature));
   const humidityData = formattedData.map((item) => parseFloat(item.humidity));
   const lightData = formattedData.map((item) => parseFloat(item.light));
+  const gasData = formattedData.map((item) => parseFloat(item.gas));
 
   // Log các phần dữ liệu để truyền vào biểu đồ
   console.log('Labels:', labels);
@@ -45,12 +46,13 @@ export default function SensorBarChart({ data }) {
               { label: 'Nhiệt độ (°C)', data: temperatureData },
               { label: 'Độ ẩm (%)', data: humidityData },
               { label: 'Ánh sáng (Lux)', data: lightData },
+              { label: 'Gas', data: gasData },
             ]}
             height={400}
             width={850}
             xAxis={[{ data: labels, scaleType: 'band' }]}
             margin={{ top: 10, bottom: 30, left: 40, right: 10 }}
-            colors={['#FF6384', '#36A2EB', '#FFCE56']}
+            colors={['#FF6384', '#36A2EB', '#FFCE56','#56ff8e']}
           />
         </Box>
       </CardContent>
