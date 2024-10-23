@@ -5,6 +5,8 @@ import com.iot.project.dto.projection.DataSensorProjection;
 import com.iot.project.dto.response.ActionLogResponse;
 import com.iot.project.dto.response.DataSensorResponse;
 import com.iot.project.dto.response.PagedResponse;
+import com.iot.project.entity.ActionLog;
+import com.iot.project.entity.DataSensor;
 import com.iot.project.repository.ActionLogRepository;
 import com.iot.project.service.ActionLogService;
 import lombok.AccessLevel;
@@ -42,5 +44,11 @@ public class ActionLogServiceImpl implements ActionLogService {
                 .last(Page.isLast())
                 .sort(Page.getSort())
                 .build();
+    }
+
+    @Override
+    public ActionLogResponse getLatestAction() {
+        ActionLog action = actionLogRepository.findLatestAction();
+        return modelMapper.map(action, ActionLogResponse.class);
     }
 }

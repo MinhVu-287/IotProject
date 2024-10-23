@@ -21,4 +21,7 @@ public interface ActionLogRepository extends JpaRepository<ActionLog, Long> {
        OR a.action LIKE %:search%
        """)
     Page<ActionLogProjection> findActionsWithCondition(String search, Pageable pageable);
+
+    @Query("SELECT a FROM ActionLog a ORDER BY a.time DESC LIMIT 1")
+    ActionLog findLatestAction();
 }

@@ -8,4 +8,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface ActionLogService {
     PagedResponse<ActionLogResponse> getAllActionsByCondition(Pageable pageable, String search);
+
+    ActionLogResponse getLatestAction();
 }

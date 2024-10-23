@@ -87,4 +87,12 @@ public class ActionLogController {
             return "Failed to parse JSON or save log: " + e.getMessage();
         }
     }
+
+    @GetMapping("/latest")
+    public ApiResponse<ActionLogResponse> getLatestAction() {
+        return ApiResponse.<ActionLogResponse>builder()
+                .message("successfully")
+                .result(actionLogService.getLatestAction())
+                .build();
+    }
 }
