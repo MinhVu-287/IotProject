@@ -16,7 +16,7 @@ const char *mqtt_password = "admin123";
 const int   mqtt_port =     1883;
 
 JsonDocument doc;
-static String Mqtt_CreateMessage(float temperature, float humidity, float light, float read_gas);
+static String Mqtt_CreateMessage(float temperature, float humidity, float light, float read_co2);
 static void Mqtt_Publish(const char *topic);
 static void Mqtt_Callback(char *topic, byte *payload, unsigned int length);
 static void Message_Receive(String _message);
@@ -95,14 +95,14 @@ void MqttSend()
 
 void Mqtt_Publish(const char *topic)
 {
-    String message = Mqtt_CreateMessage(DHT11_ReadTemperature() - 3, DHT11_ReadHumidity(), BH1750FVI_ReadLux(), Read_GAS());
+    String message = Mqtt_CreateMessage(DHT11_ReadTemperature() - 3, DHT11_ReadHumidity(), BH1750FVI_ReadLux(), Read_CO2());
     const char *payload = (const char *)message.c_str();
     client.publish(topic, payload);
 }
 
-String Mqtt_CreateMessage(float temperature, float humidity, float light, float read_gas)
+String Mqtt_CreateMessage(float temperature, float humidity, float light, float read_co2)
 {
-    if (isnan(temperature) || isnan(humidity) || isnan(light) , isnan(read_gas)) 
+    if (isnan(temperature) || isnan(humidity) || isnan(light) , isnan(read_co2)) 
     {
       Serial.println("Failed to read sensor!");
       return "failed";
@@ -114,7 +114,7 @@ String Mqtt_CreateMessage(float temperature, float humidity, float light, float 
     doc["humidity"] =  serialized(String(humidity, 2));
     doc["light"] = serialized(String(light, 2));
 
-    doc["gas"] = serialized(String(read_gas, 2));
+    doc["co2"] = serialized(String(read_co2, 2));
 
     serializeJson(doc, message);
     Serial.println(message);

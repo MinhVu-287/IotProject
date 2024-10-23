@@ -18,13 +18,13 @@ public interface DataSensorRepository extends JpaRepository<DataSensor, Long> {
               d.humidity AS humidity,
               d.light AS light,
               d.time AS time,
-              d.gas AS gas
+              d.co2 AS co2
        FROM DataSensor d
        WHERE :search IS NULL
        OR d.temperature LIKE %:search%
        OR d.humidity LIKE %:search%
        OR d.light LIKE %:search%
-       OR d.gas LIKE %:search%
+       OR d.co2 LIKE %:search%
        """)
     Page<DataSensorProjection> findDataSensorsWithCondition(String search, Pageable pageable);
 

@@ -9,6 +9,6 @@ public class DataSensorResponse {
     private String temperature;
     private String humidity;
     private String light;
-    private String gas;
+    private String co2;
     private LocalDateTime time;
 }

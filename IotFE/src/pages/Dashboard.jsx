@@ -10,7 +10,7 @@ import { dataSensorService } from '../service/dataSensorService';
 const Dashboard = () => {
   const [switchChecked, setSwitchChecked] = useState(false);
   const [lightSwitchChecked, setLightSwitchChecked] = useState(false); // New state for FAN switch
-  const [latestData, setLatestData] = useState({ temperature: 0, humidity: 0, light: 0 ,gas:0});
+  const [latestData, setLatestData] = useState({ temperature: 0, humidity: 0, light: 0 ,co2:0});
   const [chartData, setChartData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -105,7 +105,7 @@ const Dashboard = () => {
             </Grid>
             <Grid item lg={3} md={3} xs={12}>
               <Card
-                title={`Gas: ${latestData.gas}`}
+                title={`co2: ${latestData.co2}`}
                 icon={<FaGasPump />}
                 style={{ backgroundColor: '#FFCE56' }} // Color for light
               />

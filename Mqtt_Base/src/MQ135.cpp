@@ -1,6 +1,6 @@
 #include "MQ135.h"
 
-double GAS = 0;
+double CO2 = 0;
 MQUnifiedsensor MQ135(placa, Voltage_Resolution, ADC_Bit_Resolution, pin, type);
 
 void MQ135_Setup()
@@ -25,10 +25,10 @@ void MQ135_Setup()
   /*****************************  MQ CAlibration **************************/                   
   MQ135.serialDebug(true); 
 }
-float Read_GAS()
+float Read_CO2()
 {
     // MQ135.serialDebug();
     MQ135.update(); // Update data, the arduino will be read the voltage on the analog pin   
-    GAS = MQ135.readSensor(); // Sensor will read CO2 concentration using the model and a and b values setted before or in the setup   
-    return GAS;
+    CO2 = MQ135.readSensor(); // Sensor will read CO2 concentration using the model and a and b values setted before or in the setup   
+    return CO2;
 }

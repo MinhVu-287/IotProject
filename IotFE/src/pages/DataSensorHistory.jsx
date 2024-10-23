@@ -19,7 +19,7 @@ const columns = [
   { id: 'temperature', label: 'Nhiệt độ', minWidth: 150 },
   { id: 'humidity', label: 'Độ ẩm', minWidth: 150 },
   { id: 'light', label: 'Ánh sáng', minWidth: 150 },
-  { id: 'gas', label: 'Gas', minWidth: 150 },
+  { id: 'co2', label: 'Co2', minWidth: 150 },
   { id: 'timestamp', label: 'Thời gian', minWidth: 200 },
 ];
 
@@ -40,7 +40,7 @@ const DataSensorHistory = () => {
             temperature: data.temperature ? `${data.temperature}°C` : 'N/A',
             humidity: data.humidity || 'N/A',
             light: data.light ? `${data.light} lux` : 'N/A',
-            gas:data.gas || 'N/A',
+            co2:data.co2 || 'N/A',
             timestamp: data.time || 'N/A',
           })));
           setTotalRows(response.totalElements);
