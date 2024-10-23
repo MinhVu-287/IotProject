@@ -7,5 +7,6 @@ public interface DataSensorProjection {
     String getTemperature();
     String getHumidity();
     String getLight();
+    String getGas();
     LocalDateTime getTime();
 }

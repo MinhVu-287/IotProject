@@ -104,7 +104,8 @@ public class MqttConfig {
                 JsonNode jsonNode = objectMapper.readTree(payload);
 
                 // Check if the JSON has the required fields for data_sensor
-                if (jsonNode.has("temperature") && jsonNode.has("humidity") && jsonNode.has("light")) {
+                if (jsonNode.has("temperature") && jsonNode.has("humidity")
+                        && jsonNode.has("light") && jsonNode.has("gas")) {
                     saveDataSensor(jsonNode);
                 }
             } catch (Exception e) {
@@ -120,6 +121,7 @@ public class MqttConfig {
         dataSensor.setTemperature(jsonNode.get("temperature").asText());
         dataSensor.setHumidity(jsonNode.get("humidity").asText());
         dataSensor.setLight(jsonNode.get("light").asText());
+        dataSensor.setGas(jsonNode.get("gas").asText());
         dataSensor.setTime(LocalDateTime.now());
         try {
             dataSensorRepository.save(dataSensor);

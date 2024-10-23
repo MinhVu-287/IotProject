@@ -25,6 +25,9 @@ public class DataSensor {
     @Column(name = "light")
     private String light;
 
+    @Column(name = "gas")
+    private String gas;
+
     @Column(name = "time")
     private LocalDateTime time;
 }
