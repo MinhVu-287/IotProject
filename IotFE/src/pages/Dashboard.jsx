@@ -114,13 +114,13 @@ const Dashboard = () => {
               {/* Chart component for displaying sensor data */}
               <Chart data={chartData} />
             </Grid>
-            <Grid item lg={4} md={4} xs={12}>
+            <Grid item lg={4} md={8} xs={12}>
               {/* Grid for two switches that are aligned next to each other */}
-              <Grid container spacing={2} direction="column">
+              <Grid container spacing={7} direction="column">
                 <Grid item>
                   {/* First switch (LED control) */}
                   <Paper
-                    elevation={3}
+                    elevation={4}
                     className="p-4 bg-white rounded-lg border border-gray-300"
                     sx={{
                       minHeight: '100%',
@@ -142,7 +142,7 @@ const Dashboard = () => {
                 <Grid item>
                   {/* Second switch (FAN control) */}
                   <Paper
-                    elevation={3}
+                    elevation={4}
                     className="p-4 bg-white rounded-lg border border-gray-300"
                     sx={{
                       minHeight: '100%',
@@ -158,6 +158,28 @@ const Dashboard = () => {
                     <SwitchComponent
                       checked={lightSwitchChecked}
                       onChange={handleLightSwitchChange}
+                    />
+                  </Paper>
+                </Grid>
+                <Grid item>
+                  {/* Second switch (FAN control) */}
+                  <Paper
+                    elevation={4}
+                    className="p-4 bg-white rounded-lg border border-gray-300"
+                    sx={{
+                      minHeight: '100%',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      flexDirection: 'column',
+                    }} // Paper styling for the second switch
+                  >
+                    <Typography variant="h6" gutterBottom>
+                      WARNING
+                    </Typography>
+                    <SwitchComponent
+                      // checked={lightSwitchChecked}
+                      // onChange={handleLightSwitchChange}
                     />
                   </Paper>
                 </Grid>

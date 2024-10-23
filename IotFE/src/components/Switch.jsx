@@ -58,14 +58,13 @@ const SwitchComponent = ({ checked, onChange }) => {
         display="flex"
         alignItems="center"
         justifyContent="center"
-        flexDirection="column" // Set layout to column
-        height="100%" // Ensure the box takes full height of the container
+        flexDirection="row" // Set layout to row for horizontal alignment
+        gap="16px" // Add some space between the icon and the switch
       >
         <LightbulbIcon
           style={{
-            fontSize: 97, // Adjust size of the icon
+            fontSize: 80, // Adjust size of the icon
             color: checked ? '#FFCE56' : '#9e9e9e', // Yellow when checked, gray when unchecked
-            marginBottom: '16px', // Add some space between icon and switch
           }}
         />
         <FormControlLabel
