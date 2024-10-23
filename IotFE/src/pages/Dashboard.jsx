@@ -15,30 +15,39 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  const fetchLatestData = async () => {
+    try {
+      const data = await dataSensorService.getLatestDataSensor();
+      setLatestData(data);
+    } catch (err) {
+      console.error('Error fetching latest data:', err);
+      setError('Failed to fetch latest data.');
+    }
+  };
+
+  const fetchChartData = async () => {
+    try {
+      const data = await dataSensorService.getAllDataSensors();
+      setChartData(data);
+    } catch (err) {
+      console.error('Error fetching chart data:', err);
+    }
+  };
+
   useEffect(() => {
-    const fetchLatestData = async () => {
-      try {
-        const data = await dataSensorService.getLatestDataSensor();
-        setLatestData(data);
-      } catch (err) {
-        console.error('Error fetching latest data:', err);
-        setError('Failed to fetch latest data.');
-      }
-    };
-
-    const fetchChartData = async () => {
-      try {
-        const data = await dataSensorService.getAllDataSensors();
-        setChartData(data);
-      } catch (err) {
-        console.error('Error fetching chart data:', err);
-      }
-    };
-
-    // Fetch data when the component mounts
+    // Fetch initial data when the component mounts
     fetchLatestData();
     fetchChartData();
     setLoading(false);
+
+    // Set up polling to update data every 30 seconds (or adjust the interval as needed)
+    const intervalId = setInterval(() => {
+      fetchLatestData();
+      fetchChartData();
+    }, 30000); // 30 seconds interval
+
+    // Cleanup function to clear the interval when the component unmounts
+    return () => clearInterval(intervalId);
   }, []);
 
   // Function to handle LED switch change
@@ -46,18 +55,12 @@ const Dashboard = () => {
     const isChecked = event.target.checked;
     setSwitchChecked(isChecked);
   
-    // Log the state to verify the switch is working
-    console.log('LED Switch State:', isChecked);
-  
     try {
-      const payload = { led: isChecked ? '1' : '0' }; // Payload to send in the request
-      console.log('Sending LED control payload:', payload); // Log the payload
-  
-      // Send the request with the payload
+      const payload = { led: isChecked ? '1' : '0' };
       const response = await axios.post('http://localhost:8080/api/v1/action', payload);
-      console.log('LED control response:', response.data); // Log the server's response
+      console.log('LED control response:', response.data);
     } catch (err) {
-      console.error('Error controlling LED:', err); // Log any errors
+      console.error('Error controlling LED:', err);
     }
   };
 
