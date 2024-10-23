@@ -16,16 +16,16 @@ const char *mqtt_password = "admin123";
 const int   mqtt_port =     1883;
 
 JsonDocument doc;
-static String Mqtt_CreateMessage(float temperature, float humidity, float light);
+static String Mqtt_CreateMessage(float temperature, float humidity, float light, float read_gas);
 static void Mqtt_Publish(const char *topic);
 static void Mqtt_Callback(char *topic, byte *payload, unsigned int length);
 static void Message_Receive(String _message);
 
 void Mqtt_Init() {
   // Wifi Connecting
-  // Init led 23
-  pinMode(23, OUTPUT);
-  digitalWrite(23, LOW);
+  // Init led 26
+  pinMode(26, OUTPUT);
+  digitalWrite(26, LOW);
 
   pinMode(18, OUTPUT);
   digitalWrite(18, LOW);
@@ -95,17 +95,16 @@ void MqttSend()
 
 void Mqtt_Publish(const char *topic)
 {
-    String message = Mqtt_CreateMessage(DHT11_ReadTemperature()-5, DHT11_ReadHumidity(), BH1750FVI_ReadLux());
+    String message = Mqtt_CreateMessage(DHT11_ReadTemperature() - 3, DHT11_ReadHumidity(), BH1750FVI_ReadLux(), Read_GAS());
     const char *payload = (const char *)message.c_str();
     client.publish(topic, payload);
-    //delay(5000);
 }
 
-String Mqtt_CreateMessage(float temperature, float humidity, float light)
+String Mqtt_CreateMessage(float temperature, float humidity, float light, float read_gas)
 {
-    if (isnan(temperature) || isnan(humidity) || isnan(light)) 
+    if (isnan(temperature) || isnan(humidity) || isnan(light) , isnan(read_gas)) 
     {
-      Serial.println("Failed to read from DHT sensor!");
+      Serial.println("Failed to read sensor!");
       return "failed";
     }
     String message = "";
@@ -114,6 +113,9 @@ String Mqtt_CreateMessage(float temperature, float humidity, float light)
     doc["temperature"] = serialized(String(temperature, 2));
     doc["humidity"] =  serialized(String(humidity, 2));
     doc["light"] = serialized(String(light, 2));
+
+    doc["gas"] = serialized(String(read_gas, 2));
+
     serializeJson(doc, message);
     Serial.println(message);
     return message;
@@ -123,10 +125,45 @@ void Mqtt_Callback(char *topic, byte *payload, unsigned int length)
 {
   Serial.print("Message arrived on topic: ");
   Serial.println(topic);
+  // Serial.print(". Message: ");
   String message_str = (const char*) payload;
   Serial.println(message_str);
+   // Chuyển đổi payload thành C-style string (chuỗi kết thúc bằng ký tự null)
+
+
+  // char message_str[length + 1];  // Tạo một mảng char để lưu chuỗi
+  // memcpy(message_str, payload, length);
+  // message_str[length] = '\0';  // Thêm ký tự kết thúc chuỗi
+
+  // // Kiểm tra nếu topic là "action"
+  // if (strcmp(topic, "action") == 0) {
+  //   if (strcmp(message_str, "led1 on") == 0) {
+  //     digitalWrite(26, HIGH);  // Bật LED chân 26
+  //     Serial.println("LED1 turned on");
+  //   } else if (strcmp(message_str, "led1 off") == 0) {
+  //     digitalWrite(26, LOW);  // Tắt LED chân 26
+  //     Serial.println("LED1 turned off");
+  //   } else if (strcmp(message_str, "led2 on") == 0) {
+  //     digitalWrite(18, HIGH);  // Bật LED chân 18
+  //     Serial.println("LED2 turned on");
+  //   } else if (strcmp(message_str, "led2 off") == 0) {
+  //     digitalWrite(18, LOW);  // Tắt LED chân 18
+  //     Serial.println("LED2 turned off");
+  //   } else if (strcmp(message_str, "all on") == 0) {
+  //     digitalWrite(26, HIGH);  // Bật LED chân 26
+  //     digitalWrite(18, HIGH);  // Bật LED chân 18
+  //     Serial.println("LED2 turned on");
+  //   } else if (strcmp(message_str, "all off") == 0) {
+  //     digitalWrite(18, LOW);  // Tắt LED chân 18
+  //     digitalWrite(26, LOW);  // Bật LED chân 26
+  //     Serial.println("LED2 turned off");
+  //   }
+
+  // }
+
   Message_Receive(message_str);
 }
+
 void Message_Receive(String _message)
 {
     uint8_t resp_type = 0;
@@ -141,10 +178,10 @@ void Message_Receive(String _message)
     String fan = doc["fan"].as<String>();
     if (strcmp(led.c_str(), "1") == 0)
     {
-        digitalWrite(23, HIGH);
+        digitalWrite(26, HIGH);
     }
     else if(strcmp(led.c_str(), "0") == 0){
-        digitalWrite(23, LOW);
+        digitalWrite(26, LOW);
     }
     if (strcmp(fan.c_str(), "1") == 0)
     {

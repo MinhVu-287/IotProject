@@ -8,6 +8,7 @@ void setup() {
   Serial.begin(115200);
   BH1750FVI_Init();
   DHT11_Init();
+  MQ135_Setup();
   Mqtt_Init();
   if (!client.connected()) {
     Mqtt_Reconnect();
@@ -19,3 +20,5 @@ void loop() {
   delay(10);
   Mqtt_Loop();
 }
+
+

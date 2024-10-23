@@ -10,6 +10,7 @@
 // Include Header File
 #include "dht11.h"
 #include "bh1750fvi.h"
+#include "MQ135.h"
 
 extern PubSubClient client;
 
