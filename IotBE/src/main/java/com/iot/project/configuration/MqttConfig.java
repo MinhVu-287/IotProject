@@ -2,6 +2,7 @@ package com.iot.project.configuration;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.iot.project.entity.ActionLog;
 import com.iot.project.entity.DataSensor;
 import com.iot.project.repository.ActionLogRepository;
 import com.iot.project.repository.DataSensorRepository;
@@ -87,6 +88,19 @@ public class MqttConfig {
         return adapter;
     }
 
+    // Inbound adapter for 'warning' topic
+    @Bean
+    public MessageProducer inboundWarning() {
+        MqttPahoMessageDrivenChannelAdapter adapter =
+                new MqttPahoMessageDrivenChannelAdapter("spring-mqtt-client-warning", mqttClientFactory(),
+                        "warning");  // Subscribe to "warning" topic
+        adapter.setCompletionTimeout(5000);
+        adapter.setConverter(new DefaultPahoMessageConverter());
+        adapter.setQos(1);
+        adapter.setOutputChannel(mqttInputChannel());
+        return adapter;
+    }
+
     @Bean
     @ServiceActivator(inputChannel = "mqttInputChannel")
     public MessageHandler handler() {
@@ -107,11 +121,22 @@ public class MqttConfig {
                 if (jsonNode.has("temperature") && jsonNode.has("humidity") && jsonNode.has("light")) {
                     saveDataSensor(jsonNode);
                 }
+                if (jsonNode.has("warning")) {
+                    saveAction(jsonNode);
+                }
             } catch (Exception e) {
                 // Log error when parsing JSON
                 log.error("Error parsing JSON: {}", e.getMessage());
             }
         };
+    }
+
+    private void saveAction(JsonNode jsonNode) {
+        ActionLog action = new ActionLog();
+        action.setDevice("warning led");
+        action.setAction(jsonNode.get("warning").asText());
+        action.setTime(LocalDateTime.now());
+        actionLogRepository.save(action);
     }
 
     // Save DataSensor entity to database
