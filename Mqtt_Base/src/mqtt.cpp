@@ -11,6 +11,7 @@ const char* password =      "12345678";
 const char *mqtt_broker=    "192.168.137.1";
 const char *topic_pub =     "data_sensor";
 const char *topic_sub =     "action";
+const char *topic_pubWarn = "warning";
 const char *mqtt_username = "admin";
 const char *mqtt_password = "admin123";
 const int   mqtt_port =     1883;
@@ -21,15 +22,24 @@ static void Mqtt_Publish(const char *topic);
 static void Mqtt_Callback(char *topic, byte *payload, unsigned int length);
 static void Message_Receive(String _message);
 
-void Mqtt_Init() {
+uint8_t flag_warn = 0;
+bool lightHighSent = false;
+
+void Led_Init(void)
+{
   // Wifi Connecting
-  // Init led 23
-  pinMode(23, OUTPUT);
-  digitalWrite(23, LOW);
+  // Init LEDPIN
+  pinMode(LED_PIN, OUTPUT);
+  digitalWrite(LED_PIN, LOW);
 
-  pinMode(18, OUTPUT);
-  digitalWrite(18, LOW);
+  pinMode(FAN_PIN, OUTPUT);
+  digitalWrite(FAN_PIN, LOW);
 
+  pinMode(WARNING_PIN, OUTPUT);
+  digitalWrite(WARNING_PIN, LOW); 
+}
+
+void Mqtt_Init() {
   Serial.println();
   Serial.print("Connecting to ");
   Serial.println(ssid);
@@ -93,15 +103,15 @@ void MqttSend()
   Mqtt_Publish(topic_pub);
 }
 
-void Mqtt_Publish(const char *topic)
+static void Mqtt_Publish(const char *topic)
 {
-    String message = Mqtt_CreateMessage(DHT11_ReadTemperature()-5, DHT11_ReadHumidity(), BH1750FVI_ReadLux());
+    String message = Mqtt_CreateMessage(DHT11_ReadTemperature() - 3, DHT11_ReadHumidity(), BH1750FVI_ReadLux());
     const char *payload = (const char *)message.c_str();
     client.publish(topic, payload);
     //delay(5000);
 }
 
-String Mqtt_CreateMessage(float temperature, float humidity, float light)
+static String Mqtt_CreateMessage(float temperature, float humidity, float light)
 {
     if (isnan(temperature) || isnan(humidity) || isnan(light)) 
     {
@@ -119,15 +129,17 @@ String Mqtt_CreateMessage(float temperature, float humidity, float light)
     return message;
 }
 
-void Mqtt_Callback(char *topic, byte *payload, unsigned int length)
+static void Mqtt_Callback(char *topic, byte *payload, unsigned int length)
 {
   Serial.print("Message arrived on topic: ");
   Serial.println(topic);
+  // Serial.print(". Message: ");
   String message_str = (const char*) payload;
   Serial.println(message_str);
   Message_Receive(message_str);
 }
-void Message_Receive(String _message)
+
+static void Message_Receive(String _message)
 {
     uint8_t resp_type = 0;
     doc.clear();
@@ -141,16 +153,56 @@ void Message_Receive(String _message)
     String fan = doc["fan"].as<String>();
     if (strcmp(led.c_str(), "1") == 0)
     {
-        digitalWrite(23, HIGH);
+        digitalWrite(LED_PIN, HIGH);
     }
     else if(strcmp(led.c_str(), "0") == 0){
-        digitalWrite(23, LOW);
+        digitalWrite(LED_PIN, LOW);
     }
     if (strcmp(fan.c_str(), "1") == 0)
     {
-        digitalWrite(18, HIGH);
+        digitalWrite(FAN_PIN, HIGH);
     }
     else if(strcmp(fan.c_str(), "0") == 0){
-        digitalWrite(18, LOW);
+        digitalWrite(FAN_PIN, LOW);
     }
+}
+
+void Mqtt_LightWarning()
+{
+  float lightCheck = BH1750FVI_ReadLux();
+  if(lightCheck >= LIGHT_THRESHOLD_HIGH ) 
+  {
+    flag_warn = 1;
+  }
+  else if(lightCheck < LIGHT_THRESHOLD_HIGH)
+  {
+    flag_warn = 0;
+    lightHighSent = false;
+  }
+}
+
+void blinkLED(int pin, int interval) 
+{
+    static unsigned long lastMillis = 0;
+    unsigned long currentMillis = millis();
+    if (currentMillis - lastMillis >= interval) {
+        lastMillis = currentMillis;
+        digitalWrite(pin, !digitalRead(pin));  // Đảo trạng thái LED
+    }
+}
+
+void Mqtt_SendWarning(void) 
+{
+    StaticJsonDocument<200> docWarn;
+    String warningMessage;
+    // Tạo đối tượng JSON
+    docWarn["warning"] = "high";
+
+    // Chuyển đổi đối tượng JSON thành chuỗi
+    serializeJson(docWarn, warningMessage);
+
+    // Gửi chuỗi JSON qua MQTT
+    client.publish(topic_pubWarn, warningMessage.c_str());
+
+    lightHighSent = true;  // Cập nhật trạng thái để không gửi liên tục
 }

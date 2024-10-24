@@ -16,3 +16,4 @@ float DHT11_ReadHumidity(void)
 {
   return dht.readHumidity();
 }
+
