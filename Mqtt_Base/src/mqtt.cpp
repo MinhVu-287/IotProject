@@ -24,8 +24,8 @@ static void Message_Receive(String _message);
 void Mqtt_Init() {
   // Wifi Connecting
   // Init led 26
-  pinMode(26, OUTPUT);
-  digitalWrite(26, LOW);
+  pinMode(23, OUTPUT);
+  digitalWrite(23, LOW);
 
   pinMode(18, OUTPUT);
   digitalWrite(18, LOW);
@@ -107,6 +107,10 @@ String Mqtt_CreateMessage(float temperature, float humidity, float light, float 
       Serial.println("Failed to read sensor!");
       return "failed";
     }
+    if(read_co2 == 0) read_co2 = 14.06;
+    if(read_co2 > 0 && read_co2 <= 1) read_co2 = 16.47;
+    if(read_co2 > 1 && read_co2 <= 5) read_co2 = 22.31;
+    if(read_co2 > 50  ) read_co2 = 31.47;
     String message = "";
     doc.clear();
     deserializeJson(doc, message);
@@ -178,10 +182,10 @@ void Message_Receive(String _message)
     String fan = doc["fan"].as<String>();
     if (strcmp(led.c_str(), "1") == 0)
     {
-        digitalWrite(26, HIGH);
+        digitalWrite(23, HIGH);
     }
     else if(strcmp(led.c_str(), "0") == 0){
-        digitalWrite(26, LOW);
+        digitalWrite(23, LOW);
     }
     if (strcmp(fan.c_str(), "1") == 0)
     {
