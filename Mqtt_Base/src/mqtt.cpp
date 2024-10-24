@@ -24,11 +24,11 @@ static void Message_Receive(String _message);
 void Mqtt_Init() {
   // Wifi Connecting
   // Init led 26
-  pinMode(23, OUTPUT);
-  digitalWrite(23, LOW);
+  pinMode(16, OUTPUT);
+  digitalWrite(16, LOW);
 
-  pinMode(18, OUTPUT);
-  digitalWrite(18, LOW);
+  pinMode(12, OUTPUT);
+  digitalWrite(12, LOW);
 
   Serial.println();
   Serial.print("Connecting to ");
@@ -55,7 +55,7 @@ void Mqtt_Init() {
     Serial.printf("The client %s connects to the mqtt broker\n", client_id.c_str());
     if(client.connect(client_id.c_str(), mqtt_username, mqtt_password))
     {
-      client.publish(topic_pub, "12345");
+      client.publish(topic_pub, "11645");
       client.subscribe(topic_sub);
     } 
     else{
@@ -148,17 +148,17 @@ void Mqtt_Callback(char *topic, byte *payload, unsigned int length)
   //     digitalWrite(26, LOW);  // Tắt LED chân 26
   //     Serial.println("LED1 turned off");
   //   } else if (strcmp(message_str, "led2 on") == 0) {
-  //     digitalWrite(18, HIGH);  // Bật LED chân 18
+  //     digitalWrite(12, HIGH);  // Bật LED chân 12
   //     Serial.println("LED2 turned on");
   //   } else if (strcmp(message_str, "led2 off") == 0) {
-  //     digitalWrite(18, LOW);  // Tắt LED chân 18
+  //     digitalWrite(12, LOW);  // Tắt LED chân 12
   //     Serial.println("LED2 turned off");
   //   } else if (strcmp(message_str, "all on") == 0) {
   //     digitalWrite(26, HIGH);  // Bật LED chân 26
-  //     digitalWrite(18, HIGH);  // Bật LED chân 18
+  //     digitalWrite(12, HIGH);  // Bật LED chân 12
   //     Serial.println("LED2 turned on");
   //   } else if (strcmp(message_str, "all off") == 0) {
-  //     digitalWrite(18, LOW);  // Tắt LED chân 18
+  //     digitalWrite(12, LOW);  // Tắt LED chân 12
   //     digitalWrite(26, LOW);  // Bật LED chân 26
   //     Serial.println("LED2 turned off");
   //   }
@@ -182,16 +182,16 @@ void Message_Receive(String _message)
     String fan = doc["fan"].as<String>();
     if (strcmp(led.c_str(), "1") == 0)
     {
-        digitalWrite(23, HIGH);
+        digitalWrite(16, HIGH);
     }
     else if(strcmp(led.c_str(), "0") == 0){
-        digitalWrite(23, LOW);
+        digitalWrite(16, LOW);
     }
     if (strcmp(fan.c_str(), "1") == 0)
     {
-        digitalWrite(18, HIGH);
+        digitalWrite(12, HIGH);
     }
     else if(strcmp(fan.c_str(), "0") == 0){
-        digitalWrite(18, LOW);
+        digitalWrite(12, LOW);
     }
 }
