@@ -13,6 +13,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,23 +27,24 @@ public class DataSensorServiceImpl implements DataSensorService {
     ModelMapper modelMapper;
 
     @Override
-    public PagedResponse<DataSensorResponse> getAllDataSensorsByCondition(Pageable pageable, String search) {
-        Page<DataSensorProjection> Page = dataSensorRepository.findDataSensorsWithCondition(search, pageable);
+    public PagedResponse<DataSensorResponse> getAllDataSensorsByCondition(Pageable pageable, String search, LocalDateTime startDate, LocalDateTime endDate) {
+        Page<DataSensorProjection> page = dataSensorRepository.findDataSensorsWithCondition(search, startDate, endDate, pageable);
 
-        List<DataSensorResponse> content = Page.getContent().stream()
+        List<DataSensorResponse> content = page.getContent().stream()
                 .map(projection -> modelMapper.map(projection, DataSensorResponse.class))
                 .collect(Collectors.toList());
 
         return PagedResponse.<DataSensorResponse>builder()
                 .content(content)
-                .pageNumber(Page.getNumber())
-                .pageSize(Page.getSize())
-                .totalElements(Page.getTotalElements())
-                .totalPages(Page.getTotalPages())
-                .last(Page.isLast())
-                .sort(Page.getSort())
+                .pageNumber(page.getNumber())
+                .pageSize(page.getSize())
+                .totalElements(page.getTotalElements())
+                .totalPages(page.getTotalPages())
+                .last(page.isLast())
+                .sort(page.getSort())
                 .build();
     }
+
 
     @Override
     public DataSensorResponse getLatestDataSensor() {

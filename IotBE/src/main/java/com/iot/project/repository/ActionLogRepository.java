@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
+
 @Repository
 public interface ActionLogRepository extends JpaRepository<ActionLog, Long> {
     @Query("""
@@ -16,11 +18,16 @@ public interface ActionLogRepository extends JpaRepository<ActionLog, Long> {
               a.action AS action,
               a.time AS time
        FROM ActionLog a
-       WHERE :search IS NULL
-       OR a.device LIKE %:search%
-       OR a.action LIKE %:search%
+       WHERE (:search IS NULL OR a.device LIKE %:search% OR a.action LIKE %:search%)
+       AND (:startDate IS NULL OR a.time >= :startDate)
+       AND (:endDate IS NULL OR a.time <= :endDate)
        """)
-    Page<ActionLogProjection> findActionsWithCondition(String search, Pageable pageable);
+    Page<ActionLogProjection> findActionsWithCondition(
+            String search,
+            LocalDateTime startDate,
+            LocalDateTime endDate,
+            Pageable pageable
+    );
 
     @Query("SELECT a FROM ActionLog a ORDER BY a.time DESC LIMIT 1")
     ActionLog findLatestAction();

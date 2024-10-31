@@ -10,7 +10,7 @@ import TableRow from '@mui/material/TableRow';
 import TextField from '@mui/material/TextField';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import Box from '@mui/material/Box'; // Import Box for layout
+import Box from '@mui/material/Box';
 import { actionLogService } from '../service/actionLogService';
 
 const columns = [
@@ -28,14 +28,15 @@ const ActionHistory = () => {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const [search, setSearch] = useState('');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
 
     useEffect(() => {
         const fetchActions = async () => {
             setLoading(true);
             setError(null);
             try {
-                const response = await actionLogService.getAllActionsWithCondition(page, rowsPerPage, search);
-                console.log('Fetched actions response:', response);
+                const response = await actionLogService.getAllActionsWithCondition(page, rowsPerPage, search, startDate, endDate);
 
                 if (response && response.content) {
                     setRows(response.content);
@@ -53,7 +54,7 @@ const ActionHistory = () => {
         };
 
         fetchActions();
-    }, [page, rowsPerPage, search]);
+    }, [page, rowsPerPage, search, startDate, endDate]);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -68,11 +69,49 @@ const ActionHistory = () => {
         setSearch(event.target.value);
     };
 
+    const handleStartDateChange = (event) => {
+        setStartDate(event.target.value);
+    };
+
+    const handleEndDateChange = (event) => {
+        setEndDate(event.target.value);
+    };
+
     return (
         <Card className="p-4">
             <CardContent>
                 <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                     <h1 className="text-2xl font-bold">Action History</h1>
+                    {/* <TextField
+                        label="Search"
+                        variant="outlined"
+                        size="small"
+                        value={search}
+                        onChange={handleSearchChange}
+                        sx={{ width: 300 }}
+                    /> */}
+                </Box>
+                <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                    <Box display="flex" gap={2} alignItems="center">
+                        <TextField
+                            label="Start Date"
+                            type="date"
+                            variant="outlined"
+                            size="small"
+                            value={startDate}
+                            onChange={handleStartDateChange}
+                            InputLabelProps={{ shrink: true }}
+                        />
+                        <TextField
+                            label="End Date"
+                            type="date"
+                            variant="outlined"
+                            size="small"
+                            value={endDate}
+                            onChange={handleEndDateChange}
+                            InputLabelProps={{ shrink: true }}
+                        />
+                    </Box>
                     <TextField
                         label="Search"
                         variant="outlined"
@@ -84,7 +123,7 @@ const ActionHistory = () => {
                 </Box>
                 {loading && <div>Loading...</div>}
                 {error && <div className="text-red-600 mb-4">{error}</div>}
-                {rows.length === 0 && !loading && <div>No actions available.</div>} {/* Empty state handling */}
+                {rows.length === 0 && !loading && <div>No actions available.</div>}
                 <Paper sx={{ width: '100%', overflow: 'hidden' }}>
                     <TableContainer sx={{ maxHeight: 440 }}>
                         <Table stickyHeader aria-label="sticky table">
@@ -101,8 +140,8 @@ const ActionHistory = () => {
                                 {rows.map((row) => (
                                     <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
                                         {columns.map((column) => (
-                                            <TableCell key={column.id}> 
-                                                {row[column.id] ?? 'N/A'} {/* Handle null values */}
+                                            <TableCell key={column.id}>
+                                                {row[column.id] ?? 'N/A'}
                                             </TableCell>
                                         ))}
                                     </TableRow>

@@ -6,8 +6,10 @@ import com.iot.project.dto.response.PagedResponse;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDateTime;
+
 public interface ActionLogService {
-    PagedResponse<ActionLogResponse> getAllActionsByCondition(Pageable pageable, String search);
+    PagedResponse<ActionLogResponse> getAllActionsByCondition(Pageable pageable, String search, LocalDateTime startDate, LocalDateTime endDate);
 
     ActionLogResponse getLatestAction();
 }
