@@ -2,6 +2,7 @@ package com.iot.project.configuration;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.iot.project.entity.ActionLog;
 import com.iot.project.entity.DataSensor;
 import com.iot.project.repository.ActionLogRepository;
 import com.iot.project.repository.DataSensorRepository;
@@ -104,7 +105,8 @@ public class MqttConfig {
                 JsonNode jsonNode = objectMapper.readTree(payload);
 
                 // Check if the JSON has the required fields for data_sensor
-                if (jsonNode.has("temperature") && jsonNode.has("humidity") && jsonNode.has("light")) {
+                if (jsonNode.has("temperature") && jsonNode.has("humidity")
+                        && jsonNode.has("light") && jsonNode.has("co2")) {
                     saveDataSensor(jsonNode);
                 }
             } catch (Exception e) {
@@ -114,13 +116,18 @@ public class MqttConfig {
         };
     }
 
-    // Save DataSensor entity to database
     private void saveDataSensor(JsonNode jsonNode) {
         DataSensor dataSensor = new DataSensor();
         dataSensor.setTemperature(jsonNode.get("temperature").asText());
         dataSensor.setHumidity(jsonNode.get("humidity").asText());
         dataSensor.setLight(jsonNode.get("light").asText());
+        dataSensor.setCo2(jsonNode.get("co2").asText());
         dataSensor.setTime(LocalDateTime.now());
+        ActionLog actionLog = new ActionLog();
+        actionLog.setDevice("warning");
+        actionLog.setAction("high");
+        actionLog.setTime(LocalDateTime.now());
+        actionLogRepository.save(actionLog);
         try {
             dataSensorRepository.save(dataSensor);
             log.info("Saved DataSensor to MySQL.");

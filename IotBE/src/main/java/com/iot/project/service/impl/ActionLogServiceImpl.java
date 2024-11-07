@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,8 +27,8 @@ public class ActionLogServiceImpl implements ActionLogService {
     ModelMapper modelMapper;
 
     @Override
-    public PagedResponse<ActionLogResponse> getAllActionsByCondition(Pageable pageable, String search) {
-        Page<ActionLogProjection> Page = actionLogRepository.findActionsWithCondition(search, pageable);
+    public PagedResponse<ActionLogResponse> getAllActionsByCondition(Pageable pageable, String search, LocalDateTime startDate, LocalDateTime endDate) {
+        Page<ActionLogProjection> Page = actionLogRepository.findActionsWithCondition(search, startDate, endDate, pageable);
 
         List<ActionLogResponse> content = Page.getContent().stream()
                 .map(projection -> modelMapper.map(projection, ActionLogResponse.class))

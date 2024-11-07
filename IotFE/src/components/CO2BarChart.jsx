@@ -3,38 +3,32 @@ import { BarChart } from '@mui/x-charts/BarChart';
 import { Box, Card, CardContent, CardHeader } from '@mui/material';
 import { format } from 'date-fns';
 
-export default function SensorBarChart({ data }) {
-  const [title, setTitle] = useState('Biểu đồ Nhiệt độ - Độ ẩm - Ánh sáng');
+export default function CO2BarChart({ data }) {
+  const [title, setTitle] = useState('Biểu đồ CO2');
 
-  // Kiểm tra xem `data` có tồn tại hay không
+  // Check if data exists
   if (!data || data.length === 0) {
     console.log('No data available:', data);
     return <div>Không có dữ liệu để hiển thị biểu đồ.</div>;
   }
 
-  // Log dữ liệu ban đầu nhận được
+  // Log raw data received
   console.log('Raw data:', data);
 
-  // Formatting data for the chart
+  // Format data for the chart
   const formattedData = data.map((item) => ({
     ...item,
     formattedDate: format(new Date(item.time), 'dd/MM/yyyy HH:mm:ss'), // Format date-time
   }));
 
-  // Log dữ liệu đã format
+  // Log formatted data
   console.log('Formatted data:', formattedData);
 
   const labels = formattedData.map((item) => item.formattedDate);
-  const temperatureData = formattedData.map((item) => parseFloat(item.temperature));
-  const humidityData = formattedData.map((item) => parseFloat(item.humidity));
-  const lightData = formattedData.map((item) => parseFloat(item.light));
   const co2Data = formattedData.map((item) => parseFloat(item.co2));
 
-  // Log các phần dữ liệu để truyền vào biểu đồ
-  console.log('Labels:', labels);
-  console.log('Temperature Data:', temperatureData);
-  console.log('Humidity Data:', humidityData);
-  console.log('Light Data:', lightData);
+  // Log CO2 data for the chart
+  console.log('CO2 Data:', co2Data);
 
   return (
     <Card>
@@ -43,16 +37,13 @@ export default function SensorBarChart({ data }) {
         <Box sx={{ flexGrow: 1, paddingLeft: '10px' }}>
           <BarChart
             series={[
-              { label: 'Nhiệt độ (°C)', data: temperatureData },
-              { label: 'Độ ẩm (%)', data: humidityData },
-              { label: 'Ánh sáng (Lux)', data: lightData },
-              { label: 'Co2', data: co2Data },
+              { label: 'CO2 (ppm)', data: co2Data },
             ]}
             height={400}
             width={850}
             xAxis={[{ data: labels, scaleType: 'band' }]}
             margin={{ top: 10, bottom: 30, left: 40, right: 10 }}
-            colors={['#FF6384', '#36A2EB', '#FFCE56','#56ff8e']}
+            colors={['#56ff8e']} // Set color for CO2 bar
           />
         </Box>
       </CardContent>

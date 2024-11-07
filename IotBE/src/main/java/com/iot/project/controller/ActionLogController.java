@@ -16,6 +16,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.integration.mqtt.outbound.MqttPahoMessageHandler;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.Map;
+
 
 @RestController
 @RequestMapping("/api/v1/action")
@@ -39,11 +41,14 @@ public class ActionLogController {
             @RequestParam(defaultValue = ConstantValue.CURRENT_PAGE) int page,
             @RequestParam(defaultValue = ConstantValue.PAGE_SIZE) int size,
             @RequestParam(defaultValue = ConstantValue.SORT_STRATEGY) String[] sort,
-            @RequestParam(required = false) String search) {
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
+
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Order.desc(sort[0])));
         return ApiResponse.<PagedResponse<ActionLogResponse>>builder()
                 .message("successfully")
-                .result(actionLogService.getAllActionsByCondition(pageRequest, search))
+                .result(actionLogService.getAllActionsByCondition(pageRequest, search, startDate, endDate))
                 .build();
     }
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios'; // Add axios for HTTP requests
 import Card from '../components/Card';
 import Chart from '../components/Chart'; // Adjust path if necessary
-import { FaThermometerHalf, FaTint, FaSun } from 'react-icons/fa';
+import { FaThermometerHalf, FaTint, FaSun , FaGasPump } from 'react-icons/fa';
 import { Grid, Paper, Typography } from '@mui/material';
 import SwitchComponent from '../components/Switch'; // Import the new Switch component
 import { dataSensorService } from '../service/dataSensorService';
@@ -10,7 +10,7 @@ import { dataSensorService } from '../service/dataSensorService';
 const Dashboard = () => {
   const [switchChecked, setSwitchChecked] = useState(false);
   const [lightSwitchChecked, setLightSwitchChecked] = useState(false); // New state for FAN switch
-  const [latestData, setLatestData] = useState({ temperature: 0, humidity: 0, light: 0 });
+  const [latestData, setLatestData] = useState({ temperature: 0, humidity: 0, light: 0 ,co2:0});
   const [chartData, setChartData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -85,24 +85,31 @@ const Dashboard = () => {
 
           {/* Cards section for temperature, humidity, and light */}
           <Grid container spacing={2} mb={8}>
-            <Grid item lg={4} md={6} xs={12}>
+            <Grid item lg={3} md={3} xs={12}>
               <Card
                 title={`Nhiệt độ: ${latestData.temperature}°C`}
                 icon={<FaThermometerHalf />}
                 style={{ backgroundColor: '#FF6384' }} // Color for temperature
               />
             </Grid>
-            <Grid item lg={4} md={6} xs={12}>
+            <Grid item lg={3} md={3} xs={12}>
               <Card
                 title={`Độ ẩm: ${latestData.humidity}%`}
                 icon={<FaTint />}
                 style={{ backgroundColor: '#36A2EB' }} // Color for humidity
               />
             </Grid>
-            <Grid item lg={4} md={6} xs={12}>
+            <Grid item lg={3} md={3} xs={12}>
               <Card
                 title={`Ánh sáng: ${latestData.light} Lux`}
                 icon={<FaSun />}
+                style={{ backgroundColor: '#FFCE56' }} // Color for light
+              />
+            </Grid>
+            <Grid item lg={3} md={3} xs={12}>
+              <Card
+                title={`co2: ${latestData.co2}`}
+                icon={<FaGasPump />}
                 style={{ backgroundColor: '#FFCE56' }} // Color for light
               />
             </Grid>

@@ -4,10 +4,10 @@ import axios from 'axios';
 const API_URL = 'http://localhost:8080/api/v1/data-sensors'; // Base URL for the Data Sensor API
 
 // Get all data sensors with pagination, sorting, and search functionality
-const getAllDataSensorsWithCondition = async (page = 0, size = 10, search = '') => {
+const getAllDataSensorsWithCondition = async (page = 0, size = 10, search = '', startDate = null, endDate = null) => {
     try {
         const response = await axios.get(API_URL, {
-            params: { page, size, search }
+            params: { page, size, search, startDate, endDate }
         });
 
         console.log('API response:', response); // Log the whole response
