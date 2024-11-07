@@ -115,7 +115,6 @@ public class MqttConfig {
         };
     }
 
-    // Save DataSensor entity to database
     private void saveDataSensor(JsonNode jsonNode) {
         DataSensor dataSensor = new DataSensor();
         dataSensor.setTemperature(jsonNode.get("temperature").asText());

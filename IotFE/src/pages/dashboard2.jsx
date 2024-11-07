@@ -46,7 +46,7 @@ const Dashboard2 = () => {
         fetchData(); // Initial fetch
         
         // Set interval to fetch data every 5 seconds
-        const intervalId = setInterval(fetchLatestData, 5000);
+        const intervalId = setInterval(fetchLatestData,fetchChartData, 5000);
 
         // Cleanup function to clear the interval on unmount
         return () => clearInterval(intervalId);
