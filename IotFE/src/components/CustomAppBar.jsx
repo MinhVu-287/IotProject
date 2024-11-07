@@ -16,12 +16,14 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import HistoryIcon from '@mui/icons-material/History';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import LayersIcon from '@mui/icons-material/Layers';
+import Dashboard2 from '../pages/dashboard2';
 
 const NAV_ITEMS = [
   { title: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
   { title: 'Data Sensor History', icon: <HistoryIcon />, path: '/data-sensor-history' },
   { title: 'Action History', icon: <HistoryIcon />, path: '/action-history' },
-  { title: 'Profile', icon: <HistoryIcon />, path: '/profile'}
+  { title: 'Profile', icon: <HistoryIcon />, path: '/profile'},
+  { title: 'Dashboard 2', icon: <HistoryIcon />, path: '/dasboard2'}
 ];
 
 function CustomAppBar(props) {

@@ -12,6 +12,8 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Box from '@mui/material/Box'; // Import Box for layout
 import { actionLogService } from '../service/actionLogService';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css"; // Import the styles for the date picker
 
 const columns = [
     { id: 'id', label: 'ID', minWidth: 70 },
@@ -28,13 +30,15 @@ const ActionHistory = () => {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const [search, setSearch] = useState('');
+    const [startDate, setStartDate] = useState(null); // For start date
+    const [endDate, setEndDate] = useState(null); // For end date
 
     useEffect(() => {
         const fetchActions = async () => {
             setLoading(true);
             setError(null);
             try {
-                const response = await actionLogService.getAllActionsWithCondition(page, rowsPerPage, search);
+                const response = await actionLogService.getAllActionsWithCondition(page, rowsPerPage, search, startDate, endDate);
                 console.log('Fetched actions response:', response);
 
                 if (response && response.content) {
@@ -53,7 +57,7 @@ const ActionHistory = () => {
         };
 
         fetchActions();
-    }, [page, rowsPerPage, search]);
+    }, [page, rowsPerPage, search, startDate, endDate]);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -82,9 +86,34 @@ const ActionHistory = () => {
                         sx={{ width: 300 }}
                     />
                 </Box>
+
+                <Box display="flex" justifyContent="space-between" mb={2}>
+                    <div>
+                        <span>Start Date: </span>
+                        <DatePicker
+                            selected={startDate}
+                            onChange={(date) => setStartDate(date)}
+                            dateFormat="yyyy-MM-dd"
+                            placeholderText="Select Start Date"
+                            className="date-picker"
+                        />
+                    </div>
+                    <div>
+                        <span>End Date: </span>
+                        <DatePicker
+                            selected={endDate}
+                            onChange={(date) => setEndDate(date)}
+                            dateFormat="yyyy-MM-dd"
+                            placeholderText="Select End Date"
+                            className="date-picker"
+                        />
+                    </div>
+                </Box>
+
                 {loading && <div>Loading...</div>}
                 {error && <div className="text-red-600 mb-4">{error}</div>}
                 {rows.length === 0 && !loading && <div>No actions available.</div>} {/* Empty state handling */}
+                
                 <Paper sx={{ width: '100%', overflow: 'hidden' }}>
                     <TableContainer sx={{ maxHeight: 440 }}>
                         <Table stickyHeader aria-label="sticky table">
@@ -101,7 +130,7 @@ const ActionHistory = () => {
                                 {rows.map((row) => (
                                     <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
                                         {columns.map((column) => (
-                                            <TableCell key={column.id}> 
+                                            <TableCell key={column.id}>
                                                 {row[column.id] ?? 'N/A'} {/* Handle null values */}
                                             </TableCell>
                                         ))}

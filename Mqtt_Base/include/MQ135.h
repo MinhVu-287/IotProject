@@ -6,7 +6,6 @@
 
 #define placa "ESP-32"
 #define Voltage_Resolution 3.3
-#define pin 34
 #define type "MQ-5"
 #define ADC_Bit_Resolution 12
 #define RatioMQ135CleanAir 3.6  

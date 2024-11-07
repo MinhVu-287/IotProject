@@ -13,6 +13,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,8 +26,8 @@ public class DataSensorServiceImpl implements DataSensorService {
     ModelMapper modelMapper;
 
     @Override
-    public PagedResponse<DataSensorResponse> getAllDataSensorsByCondition(Pageable pageable, String search) {
-        Page<DataSensorProjection> Page = dataSensorRepository.findDataSensorsWithCondition(search, pageable);
+    public PagedResponse<DataSensorResponse> getAllDataSensorsByCondition(Pageable pageable, String search, LocalDateTime startDate, LocalDateTime endDate) {
+        Page<DataSensorProjection> Page = dataSensorRepository.findDataSensorsWithCondition(search, startDate, endDate, pageable);
 
         List<DataSensorResponse> content = Page.getContent().stream()
                 .map(projection -> modelMapper.map(projection, DataSensorResponse.class))

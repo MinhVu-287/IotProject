@@ -1,7 +1,7 @@
 #include "MQ135.h"
 
 double CO2 = 0;
-MQUnifiedsensor MQ135(placa, Voltage_Resolution, ADC_Bit_Resolution, pin, type);
+MQUnifiedsensor MQ135(placa, Voltage_Resolution, ADC_Bit_Resolution, 34, type);
 
 void MQ135_Setup()
 {

@@ -5,6 +5,7 @@ import DataSensorHistory from './pages/DataSensorHistory';
 import ActionHistory from './pages/ActionHistory';
 import CustomAppBar from './components/CustomAppBar';
 import Profile from './pages/Profile';
+import Dashboard2 from './pages/dashboard2';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/data-sensor-history" element={<DataSensorHistory />} />
           <Route path="/action-history" element={<ActionHistory />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/dasboard2" element={<Dashboard2 />} />
         </Routes>
       </div>
     </Router>
