@@ -2,6 +2,7 @@ package com.iot.project.configuration;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.iot.project.entity.ActionLog;
 import com.iot.project.entity.DataSensor;
 import com.iot.project.repository.ActionLogRepository;
 import com.iot.project.repository.DataSensorRepository;
@@ -122,6 +123,11 @@ public class MqttConfig {
         dataSensor.setLight(jsonNode.get("light").asText());
         dataSensor.setCo2(jsonNode.get("co2").asText());
         dataSensor.setTime(LocalDateTime.now());
+        ActionLog actionLog = new ActionLog();
+        actionLog.setDevice("warning");
+        actionLog.setAction("high");
+        actionLog.setTime(LocalDateTime.now());
+        actionLogRepository.save(actionLog);
         try {
             dataSensorRepository.save(dataSensor);
             log.info("Saved DataSensor to MySQL.");

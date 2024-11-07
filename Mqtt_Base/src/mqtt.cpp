@@ -213,11 +213,11 @@ void Message_Receive(String _message)
 void Mqtt_Co2Warning()
 {
 
-  if (co2 >= 80)
+  if (co2 >= 60)
   {
     flag_warn = 1;
   }
-  else if (co2 < 80)
+  else if (co2 < 60)
   {
     flag_warn = 0;
     lightHighSent = false;
